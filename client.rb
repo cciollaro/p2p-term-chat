@@ -1,4 +1,4 @@
-require 'socket'      # Sockets are in standard library
+require 'socket'
 
 hostname = 'localhost'
 port = 8888
@@ -6,7 +6,13 @@ port = 8888
 s = TCPSocket.open(hostname, port)
 
 
+Thread.new do
+	loop do
+		puts s.gets
+	end
+end
+
+
 loop do
-	inbound = s.gets
-	puts line
+	s.puts gets
 end
