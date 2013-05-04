@@ -1,25 +1,19 @@
 require 'socket'
 
 server = TCPServer.open(8888)
+clients = []
 
-client1 = server.accept
-puts "one person connected"
-client1.puts "waiting for partner"
-client2 = server.accept
-puts "both people connected"
-client1.puts "connected to partner"
-client2.puts "connected to partner"
-
-Thread.new do
-	while msg = client1.gets
-		client2.puts msg
+def broadcast(chatters)
+	Thread.new do
+		while msg = chatters[-1].gets
+			chatters[0..-2].each{|x| x.puts msg}
+		end
 	end
 end
 
-Thread.new do
-	while msg = client2.gets
-		client1.puts msg
-	end
+loop do
+	clients << server.accept
+	puts "someone joined"
+	clients[-1].puts "#{clients.size} people present"
+	broadcast(clients)
 end
-
-loop {}
