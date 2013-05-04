@@ -1,19 +1,20 @@
 require 'socket'
+require 'thread'
 
-server = TCPServer.open(8888)
+port = (ARGV.length.zero? ? 8888 : ARGV.first)
+
+server = TCPServer.open(port)
 clients = []
-
-def broadcast(chatters)
-	Thread.new do
-		while msg = chatters[-1].gets
-			chatters[0..-2].each{|x| x.puts msg}
-		end
-	end
-end
+lock = Mutex.new
 
 loop do
-	clients << server.accept
-	puts "someone joined"
-	clients[-1].puts "#{clients.size} people present"
-	broadcast(clients)
+	new_client = server.accept
+	clients << new_client
+	Thread.new(new_client) do |chatter|
+		while msg = chatter.gets
+			lock.synchronize do
+				clients.reject{|x| x == chatter}.each{|x| x.puts msg}
+			end
+		end
+	end
 end
