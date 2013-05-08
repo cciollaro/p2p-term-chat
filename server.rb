@@ -7,6 +7,14 @@ server = TCPServer.open(port)
 clients = []
 lock = Mutex.new
 
+Thread.new do
+	while msg = gets
+		lock.synchronize do
+			clients.each{|x| x.puts "SERVER: #{msg}"}
+		end
+	end
+end
+
 loop do
 	new_client = server.accept
 	clients << new_client

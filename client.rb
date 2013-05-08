@@ -7,8 +7,8 @@ s = TCPSocket.open(hostname, port)
 
 
 Thread.new do
-	loop do
-		puts s.gets
+	while msg = s.gets
+		puts msg
 	end
 end
 
