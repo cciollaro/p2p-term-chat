@@ -72,8 +72,16 @@ class ChatClient < Gtk::Window
     end
 end
 
-hostname = 'localhost'
-port = 8888
+if ARGV.length == 1
+	puts "usage: ./gui.rb <host> <port>, or no params for localhost 8888"
+	exit
+elsif ARGV.length == 2
+	hostname = ARGV[0]
+	port = ARGV[1]
+else
+	hostname = "localhost"
+	port = 8888
+end
 
 s = TCPSocket.open(hostname, port)
 
