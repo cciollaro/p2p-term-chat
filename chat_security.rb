@@ -3,7 +3,6 @@ require 'openssl'
 class ChatSecurity	
 	def initialize(partner_pub)
 		@partner_public_key = partner_pub
-		prev_dir = Dir.pwd
 		dir = "#{Dir.home}/.rube_chat"
 
 		unless File.exists?(dir) && File.directory?(dir)
