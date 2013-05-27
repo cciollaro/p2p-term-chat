@@ -10,21 +10,19 @@ server = TCPSocket.open(hostname, port)
 
 #listener thread
 Thread.new do
-	while mesg = server.gets
+	while in_msg = server.gets
 		print CLEAR_CUR_LINE
-		puts "#{their_name}: #{mesg}"
+		puts "#{their_name}: #{in_msg}"
 		print "#{your_name}: #{Readline.line_buffer}"
 	end
 end
 
 begin
-
-	while msg = Readline::readline("#{your_name}: ", true)
-		server.puts msg
+	while out_msg = Readline::readline("#{your_name}: ", true)
+		server.puts out_msg
 	end
-	
 rescue Interrupt
-									#try to tell the server you've left
+	#try to tell the server you've left
 	server.puts 'peacin' rescue nil	#but don't worry if you can't
 rescue Errno::EPIPE
 	puts 'server disconnected'
